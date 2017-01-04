@@ -219,7 +219,13 @@ export class TouchBackend {
             // to handle other browsers, we could just call window.getSelection().removeAllRanges();
             if (e.target.tagName !== 'SELECT' && e.target.tagName !== 'INPUT') {
                 e.preventDefault();
-                Array.from(document.getElementsByTagName('input')).forEach(element => { element.blur(); });
+
+                // when clicking on draggable (DragSource decorated) component, document.activeElement doesn't change
+                // the following resets document.activeElement to document.body
+                const activeElement = document.activeElement;
+                if (activeElement && typeof activeElement.blur === 'function') {
+                     activeElement.blur();
+                }
             }
         }
     }
